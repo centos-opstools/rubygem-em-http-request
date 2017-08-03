@@ -2,14 +2,13 @@
 %global gem_name em-http-request
 
 Name:           rubygem-%{gem_name}
-Version:        1.1.5
-Release:        2%{?dist}
+Version:        XXX
+Release:        1%{?dist}
 Summary:        EventMachine based, async HTTP Request client
 Group:          Development/Languages
 License:        MIT
 URL:            http://github.com/igrigorik/em-http-request
 Source0:        https://rubygems.org/gems/%{gem_name}-%{version}.gem
-Patch0:         0000-Remove-bundler-dependency.patch
 
 BuildRequires:  ruby(release)
 BuildRequires:  rubygems-devel
@@ -17,17 +16,17 @@ BuildRequires:  ruby
 BuildRequires:  rubygem(rspec)
 BuildRequires:  rubygem(multi_json)
 BuildRequires:  rubygem(rack)
-BuildRequires:  rubygem(eventmachine) >= 1.0.3
-BuildRequires:  rubygem(em-socksify) >= 0.3
-BuildRequires:  rubygem(addressable) >= 2.3.4
-BuildRequires:  rubygem(cookiejar) >= 0.3.2
-BuildRequires:  rubygem(http_parser.rb) >= 0.6.0
+BuildRequires:  rubygem(eventmachine)
+BuildRequires:  rubygem(em-socksify)
+BuildRequires:  rubygem(addressable)
+BuildRequires:  rubygem(cookiejar)
+BuildRequires:  rubygem(http_parser.rb)
 
-Requires:       rubygem(eventmachine) >= 1.0.3
-Requires:       rubygem(em-socksify) >= 0.3
-Requires:       rubygem(addressable) >= 2.3.4
-Requires:       rubygem(cookiejar) >= 0.3.2
-Requires:       rubygem(http_parser.rb) >= 0.6.0
+Requires:       rubygem(eventmachine)
+Requires:       rubygem(em-socksify)
+Requires:       rubygem(addressable)
+Requires:       rubygem(cookiejar)
+Requires:       rubygem(http_parser.rb)
 
 %if 0%{?rhel} > 0
 Provides: rubygem(%{gem_name}) = %{version}
@@ -46,11 +45,19 @@ BuildArch:      noarch
 %description doc
 Documentation for %{name}.
 
+
 %prep
 gem unpack %{SOURCE0}
+%if 0%{?dlrn} > 0
+%setup -q -D -T -n  %{dlrn_nvr}
+%else
 %setup -q -D -T -n  %{gem_name}-%{version}
+%endif
 gem spec %{SOURCE0} -l --ruby > %{gem_name}.gemspec
-%patch0 -p1
+
+# Remove bundler dependency
+find spec/ -type f -exec sed "s/require ['\"]bundler.*['\"]//g" {} +
+
 
 %build
 # Create the gem as gem install only works on a gem file
@@ -75,6 +82,7 @@ pushd .%{gem_instdir}
 #rspec -Ilib spec
 popd
 
+
 %files
 %dir %{gem_instdir}
 %exclude %{gem_instdir}/.gemtest
@@ -96,9 +104,5 @@ popd
 %{gem_instdir}/examples
 %{gem_instdir}/spec
 
-%changelog
-* Mon Jan 02 2017 Martin Mágr <mmagr@redhat.com> - 1.1.5-2
-- Disabled unit tests due to network connection requirement
 
-* Mon Jan 02 2017 Martin Mágr <mmagr@redhat.com> - 1.1.5-1
-- Initial package
+%changelog
