@@ -3,7 +3,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.1.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        EventMachine based, async HTTP Request client
 Group:          Development/Languages
 License:        MIT
@@ -97,6 +97,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Wed Sep 05 2018 Matthias Runge <mrunge@redhat.com> - 1.1.5-4
+- bump release to trigger build
+
 * Mon Sep 04 2017 Matthias Runge <mrunge@redhat.com> - 1.1.5-3
 - bump version to trigger build
 - initial import into CentOS opstools
